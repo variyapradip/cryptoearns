@@ -44,13 +44,15 @@ img { max-width: 100%; }
   .stats-grid { grid-template-columns: 1fr 1fr !important; }
   .featured-banner { grid-template-columns: 1fr !important; }
 }
+
+@media (max-width: 768px) {
+  .mb_men {
+    display: none;
+  }
+}
+
 @media (max-width: 600px) {
   .tasks-grid { grid-template-columns: 1fr !important; }
   .stats-grid { grid-template-columns: 1fr 1fr !important; }
   .hide-sm { display: none !important; }
-}
-@media (max-width: 768px){
-.mb_men{
-  display: none;
-}
 }

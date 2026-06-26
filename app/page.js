@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
+
 // ── Color map for known coins ──
 const COLOR_MAP = {
   bitcoin: '#f7931a', ethereum: '#627eea', solana: '#9945ff',
