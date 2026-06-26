@@ -5,14 +5,30 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 // ── Mock crypto prices ──
-const COINS = [
-  { symbol: 'BTC', name: 'Bitcoin',  price: 67842.50, change: 2.34,  color: '#f7931a' },
-  { symbol: 'ETH', name: 'Ethereum', price: 3521.80,  change: -1.12, color: '#627eea' },
-  { symbol: 'SOL', name: 'Solana',   price: 182.45,   change: 5.67,  color: '#9945ff' },
-  { symbol: 'BNB', name: 'BNB',      price: 612.30,   change: 0.88,  color: '#f3ba2f' },
-  { symbol: 'ADA', name: 'Cardano',  price: 0.4821,   change: -2.10, color: '#0033ad' },
-  { symbol: 'DOT', name: 'Polkadot', price: 7.92,     change: 3.45,  color: '#e6007a' },
-];
+const [COINS, setCoins] = useState([]);
+
+useEffect(() => {
+  const key = process.env.NEXT_PUBLIC_COINGECKO_KEY;
+  fetch(
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&x_cg_demo_api_key=${key}`
+  )
+    .then(r => r.json())
+    .then(data => {
+      const mapped = data.map(c => ({
+        id:     c.id,
+        symbol: c.symbol.toUpperCase(),
+        name:   c.name,
+        image:  c.image,
+        price:  c.current_price,
+        change: parseFloat((c.price_change_percentage_24h ?? 0).toFixed(2)),
+        cap:    c.market_cap,
+        rank:   c.market_cap_rank,
+        color:  COLOR_MAP[c.id] || '#9d5cff',
+      }));
+      setCoins(mapped);
+    })
+    .catch(err => console.error('CoinGecko error:', err));
+}, []);
 
 const TASKS = [
   { id: 1, title: 'Watch & Earn', desc: 'Watch YouTube videos and earn crypto instantly.', reward: '0.01841', usd: '$0.01', icon: '▶', color: '#7c3aed' },
