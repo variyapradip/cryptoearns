@@ -425,6 +425,11 @@ export default function HomePage() {
           .stats-grid { grid-template-columns: 1fr 1fr !important; }
           .hide-sm { display: none !important; }
         }
+        @media (max-width: 768px) {
+          .mb_men {
+            display: none;
+          }
+        }
       `}</style>
     </>
   );
