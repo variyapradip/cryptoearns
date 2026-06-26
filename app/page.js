@@ -4,13 +4,15 @@ import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-// ── Color map for known coins ──
-const COLOR_MAP = {
-  bitcoin: '#f7931a', ethereum: '#627eea', solana: '#9945ff',
-  binancecoin: '#f3ba2f', cardano: '#0033ad', polkadot: '#e6007a',
-  dogecoin: '#c2a633', tether: '#26a17b', ripple: '#00aae4',
-  avalanche: '#e84142', chainlink: '#2a5ada', 'usd-coin': '#2775ca',
-};
+// ── Mock crypto prices ──
+const COINS = [
+  { symbol: 'BTC', name: 'Bitcoin',  price: 67842.50, change: 2.34,  color: '#f7931a' },
+  { symbol: 'ETH', name: 'Ethereum', price: 3521.80,  change: -1.12, color: '#627eea' },
+  { symbol: 'SOL', name: 'Solana',   price: 182.45,   change: 5.67,  color: '#9945ff' },
+  { symbol: 'BNB', name: 'BNB',      price: 612.30,   change: 0.88,  color: '#f3ba2f' },
+  { symbol: 'ADA', name: 'Cardano',  price: 0.4821,   change: -2.10, color: '#0033ad' },
+  { symbol: 'DOT', name: 'Polkadot', price: 7.92,     change: 3.45,  color: '#e6007a' },
+];
 
 const TASKS = [
   { id: 1, title: 'Watch & Earn', desc: 'Watch YouTube videos and earn crypto instantly.', reward: '0.01841', usd: '$0.01', icon: '▶', color: '#7c3aed' },
@@ -35,7 +37,11 @@ const STATS = [
   { label: 'Tasks Available', value: '10,000+' },
   { label: 'Countries',       value: '190+' },
 ];
-
+useEffect(() => {
+  fetch(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&x_cg_demo_api_key=${process.env.NEXT_PUBLIC_COINGECKO_KEY}`)
+    .then(r => r.json())
+    .then(data => setCoins(data));
+}, []);
 // ── Glow blob ──
 function GlowBlob({ color, style }) {
   return (
@@ -65,23 +71,15 @@ function CoinBadge({ coin }) {
     }}
       onMouseEnter={e => { e.currentTarget.style.borderColor = '#3a3a60'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
       onMouseLeave={e => { e.currentTarget.style.borderColor = '#252a45'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-      {coin.image
-        ? <img src={coin.image} alt={coin.symbol} style={{ width: 36, height: 36, borderRadius: '50%' }} />
-        : <div style={{ width: 36, height: 36, borderRadius: '50%', background: coin.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: coin.color }}>
-            {coin.symbol.slice(0, 1)}
-          </div>
-      }
+      <div style={{ width: 36, height: 36, borderRadius: '50%', background: coin.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: coin.color }}>
+        {coin.symbol.slice(0, 1)}
+      </div>
       <div>
         <div style={{ fontSize: 13, fontWeight: 700 }}>{coin.symbol}</div>
         <div style={{ fontSize: 11, color: '#8892b0' }}>{coin.name}</div>
       </div>
       <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
-        <div style={{ fontSize: 13, fontWeight: 600 }}>
-          {coin.price >= 1
-            ? '$' + coin.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-            : '$' + coin.price.toFixed(6)
-          }
-        </div>
+        <div style={{ fontSize: 13, fontWeight: 600 }}>${coin.price.toLocaleString()}</div>
         <div style={{ fontSize: 11, color: up ? '#22c55e' : '#f43f5e', fontWeight: 600 }}>
           {up ? '▲' : '▼'} {Math.abs(coin.change)}%
         </div>
@@ -125,34 +123,11 @@ function TaskCard({ task }) {
 export default function HomePage() {
   const [ticker, setTicker] = useState(0);
 
-  // ── Live top 100 coins from CoinGecko ──
-  const [COINS, setCoins] = useState([]);
-
-  useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_COINGECKO_KEY;
-    fetch(
-      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&x_cg_demo_api_key=${key}`
-    )
-      .then(r => r.json())
-      .then(data => {
-        if (!Array.isArray(data)) return;
-        setCoins(data.map(c => ({
-          symbol: c.symbol.toUpperCase(),
-          name:   c.name,
-          image:  c.image,
-          price:  c.current_price,
-          change: parseFloat((c.price_change_percentage_24h ?? 0).toFixed(2)),
-          color:  COLOR_MAP[c.id] || '#9d5cff',
-        })));
-      })
-      .catch(err => console.error('CoinGecko error:', err));
-  }, []);
-
   useEffect(() => {
     const t = setInterval(() => setTicker(p => p + 1), 3000);
     return () => clearInterval(t);
   }, []);
-  // console.log('coins list' , COINS)
+
   return (
     <>
       <Navbar />
@@ -212,9 +187,9 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right — Live coin cards (top 6) */}
+            {/* Right — Live coin cards */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }} className="hero-coins">
-              {COINS.slice(0, 6).map(c => <CoinBadge key={c.symbol} coin={c} />)}
+              {COINS.map(c => <CoinBadge key={c.symbol} coin={c} />)}
             </div>
           </div>
         </section>
@@ -355,20 +330,12 @@ export default function HomePage() {
               }}
                 onMouseEnter={e => e.currentTarget.style.background = '#1a1e35'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                {c.image
-                  ? <img src={c.image} alt={c.symbol} style={{ width: 36, height: 36, borderRadius: '50%' }} />
-                  : <div style={{ width: 36, height: 36, borderRadius: '50%', background: c.color + '20', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, color: c.color }}>{c.symbol[0]}</div>
-                }
+                <div style={{ width: 36, height: 36, borderRadius: '50%', background: c.color + '20', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, color: c.color }}>{c.symbol[0]}</div>
                 <div>
                   <div style={{ fontWeight: 700, fontSize: 14 }}>{c.name}</div>
                   <div style={{ fontSize: 12, color: '#8892b0' }}>{c.symbol}</div>
                 </div>
-                <div style={{ fontWeight: 700 }}>
-                  {c.price >= 1
-                    ? '$' + c.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                    : '$' + c.price.toFixed(6)
-                  }
-                </div>
+                <div style={{ fontWeight: 700 }}>${c.price.toLocaleString()}</div>
                 <div style={{ color: c.change >= 0 ? '#22c55e' : '#f43f5e', fontWeight: 600, fontSize: 13 }}>
                   {c.change >= 0 ? '▲' : '▼'} {Math.abs(c.change)}%
                 </div>
@@ -409,7 +376,21 @@ export default function HomePage() {
       </main>
       <Footer />
 
- 
+      <style>{`
+        @media (max-width: 900px) {
+          .hero-grid { grid-template-columns: 1fr !important; }
+          .hero-coins { display: none !important; }
+          .steps-grid { grid-template-columns: 1fr !important; }
+          .tasks-grid { grid-template-columns: 1fr 1fr !important; }
+          .stats-grid { grid-template-columns: 1fr 1fr !important; }
+          .featured-banner { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 600px) {
+          .tasks-grid { grid-template-columns: 1fr !important; }
+          .stats-grid { grid-template-columns: 1fr 1fr !important; }
+          .hide-sm { display: none !important; }
+        }
+      `}</style>
     </>
   );
 }
