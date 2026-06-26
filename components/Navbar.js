@@ -43,12 +43,12 @@ export default function Navbar() {
 
         {/* Right Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Link href="/login" style={{
+          <Link className="mb_menu" href="/login" style={{
             fontSize: 14, fontWeight: 600, color: '#9d5cff',
             padding: '8px 18px', borderRadius: 8,
             border: '1px solid #3a2a6e',
           }}>Log in</Link>
-          <Link href="/register" style={{
+          <Link className="mb_menu" href="/register" style={{
             fontSize: 14, fontWeight: 600,
             padding: '8px 20px', borderRadius: 8,
             background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
