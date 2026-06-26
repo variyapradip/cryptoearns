@@ -427,7 +427,7 @@ export default function HomePage() {
         }
         @media (max-width: 768px) {
           .mb_men {
-            display: none;
+            display: none !important;
           }
         }
       `}</style>
