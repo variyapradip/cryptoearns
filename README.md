@@ -121,7 +121,7 @@ Use **CoinGecko API** — completely free, no key needed:
 ```js
 // In app/page.js, replace COINS array with live data:
 useEffect(() => {
-  fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana,binancecoin,cardano,polkadot')
+  fetch('`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&CG-u4SgJBPm3dc5jrnCVQp8o1EJ=${process.env.NEXT_PUBLIC_COINGECKO_KEY}')
     .then(r => r.json())
     .then(data => setCoins(data));
 }, []);
