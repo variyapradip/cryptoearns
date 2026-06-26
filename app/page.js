@@ -409,21 +409,7 @@ export default function HomePage() {
       </main>
       <Footer />
 
-      <style>{`
-        @media (max-width: 900px) {
-          .hero-grid { grid-template-columns: 1fr !important; }
-          .hero-coins { display: none !important; }
-          .steps-grid { grid-template-columns: 1fr !important; }
-          .tasks-grid { grid-template-columns: 1fr 1fr !important; }
-          .stats-grid { grid-template-columns: 1fr 1fr !important; }
-          .featured-banner { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 600px) {
-          .tasks-grid { grid-template-columns: 1fr !important; }
-          .stats-grid { grid-template-columns: 1fr 1fr !important; }
-          .hide-sm { display: none !important; }
-        }
-      `}</style>
+ 
     </>
   );
 }
