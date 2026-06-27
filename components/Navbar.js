@@ -1,10 +1,34 @@
 'use client';
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../lib/firebase";
+import { useRouter } from "next/navigation";
+
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const guestLinks = [
+    { name: "Earn", href: "/earn" },
+    { name: "Markets", href: "/markets" },
+    { name: "Referrals", href: "/referrals" },
+    { name: "Help", href: "/help" },
+  ];
+  const router = useRouter();
 
+  const userLinks = [
+    { name: "Earn", href: "/earn" },
+    { name: "Bonus Code", href: "/bonuscode" },
+    { name: "Help", href: "/help" },
+  ];
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
   return (
     <>
       <nav style={{
@@ -31,59 +55,151 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Links */}
-        <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-          {['Earn', 'Markets', 'Referrals', 'Help'].map(item => (
-            <Link key={item} href="#" style={{ fontSize: 14, fontWeight: 500, color: '#8892b0', transition: 'color .2s' }}
-              onMouseEnter={e => e.target.style.color = '#f0f2ff'}
-              onMouseLeave={e => e.target.style.color = '#8892b0'}>
-              {item}
+        <div
+          className="nav-links"
+          style={{ display: "flex", alignItems: "center", gap: 32 }}
+        >
+          {(user ? userLinks : guestLinks).map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className="nav-link"
+              style={{ fontSize: 14, fontWeight: 500 }}
+            >
+              {item.name}
             </Link>
           ))}
         </div>
 
         {/* Right Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <Link className="mb_menu" href="/login" style={{
-            fontSize: 14, fontWeight: 600, color: '#9d5cff',
-            padding: '8px 18px', borderRadius: 8,
-            border: '1px solid #3a2a6e',
-          }}>Log in</Link>
-          <Link className="mb_menu" href="/register" style={{
-            fontSize: 14, fontWeight: 600,
-            padding: '8px 20px', borderRadius: 8,
-            background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-            color: '#fff',
-          }}>Get Started</Link>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
 
-          {/* Burger */}
+          {user ? (
+            <>
+            <div className="profile_box">
+              <div className="profile_img">
+              <img className="img-fluid" src={`/images/user.jpg`} alt="User" />
+              </div>
+              <div className="profile_earning-box">
+                <span className="profile_lable">EARNING</span>
+            
+                  <span className="user_earning-text">1.058</span>
+       
+              </div>
+              <Link className="full_link"
+                href="/profile"
+              ></Link>
+            </div>
+            </>
+          ) : (
+            <>
+              <Link
+                className="mb_menu"
+                href="/login"
+                style={{
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "#9d5cff",
+                  padding: "8px 18px",
+                  borderRadius: 8,
+                  border: "1px solid #3a2a6e",
+                }}
+              >
+                Log in
+              </Link>
+
+              <Link
+                className="mb_menu"
+                href="/register"
+                style={{
+                  fontSize: 14,
+                  fontWeight: 600,
+                  padding: "8px 20px",
+                  borderRadius: 8,
+                  background: "linear-gradient(135deg,#7c3aed,#3b82f6)",
+                  color: "#fff",
+                }}
+              >
+                Get Started
+              </Link>
+            </>
+          )}
+
           <button
             onClick={() => setOpen(!open)}
-            style={{ display: 'none', flexDirection: 'column', gap: 5, padding: 6 }}
             className="burger"
             aria-label="Menu"
+            style={{ display: "none", flexDirection: "column", gap: 5, padding: 6 }}
           >
-            {[0,1,2].map(i => (
-              <span key={i} style={{ display: 'block', width: 22, height: 2, background: '#8892b0', borderRadius: 2 }} />
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                style={{
+                  display: "block",
+                  width: 22,
+                  height: 2,
+                  background: "#8892b0",
+                  borderRadius: 2,
+                }}
+              />
             ))}
           </button>
+
         </div>
       </nav>
 
       {/* Mobile drawer */}
       {open && (
-        <div style={{
-          position: 'fixed', top: 64, left: 0, right: 0, bottom: 0,
-          background: '#0d0f1a', zIndex: 99,
-          display: 'flex', flexDirection: 'column',
-          padding: 32, gap: 24,
-        }}>
-          {['Earn', 'Markets', 'Referrals', 'Help'].map(item => (
-            <Link key={item} href="#" style={{ fontSize: 18, fontWeight: 600, color: '#f0f2ff' }} onClick={() => setOpen(false)}>{item}</Link>
+        <div
+          style={{
+            position: "fixed",
+            top: 64,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "#0d0f1a",
+            zIndex: 99,
+            display: "flex",
+            flexDirection: "column",
+            padding: 32,
+            gap: 24,
+          }}
+        >
+          {(user ? userLinks : guestLinks).map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              onClick={() => setOpen(false)}
+            >
+              {item.name}
+            </Link>
           ))}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 }}>
-            <Link href="/login" style={{ textAlign: 'center', padding: '12px', border: '1px solid #3a2a6e', borderRadius: 10, fontWeight: 600, color: '#9d5cff' }} onClick={() => setOpen(false)}>Log in</Link>
-            <Link href="/register" style={{ textAlign: 'center', padding: '12px', background: 'linear-gradient(135deg,#7c3aed,#3b82f6)', borderRadius: 10, fontWeight: 600, color: '#fff' }} onClick={() => setOpen(false)}>Get Started</Link>
-          </div>
+
+          {user ? (
+            <>
+              <Link href="/profile" onClick={() => setOpen(false)}>
+                My Profile
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="logout-btn"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" onClick={() => setOpen(false)}>
+                Log in
+              </Link>
+
+              <Link href="/register" onClick={() => setOpen(false)}>
+                Get Started
+              </Link>
+            </>
+          )}
+
         </div>
       )}
 

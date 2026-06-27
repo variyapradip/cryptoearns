@@ -134,7 +134,7 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <main className="main">
+    
 
         {/* ── HERO ── */}
         <section className="hero-section">
@@ -340,8 +340,8 @@ export default function HomePage() {
           </div>
         </section>
 
-      </main>
-      <Footer />
+     
+   
     </>
   );
 }

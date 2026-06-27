@@ -75,6 +75,26 @@ NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ```
+-----------------------------------------------
+
+User Fater Login
+
+
+--- After Login and register auth----
+
+
+---- component list----
+
+1. Main slider task
+2. social media task 
+3. Most Populer task
+4. Partner 
+5. PLay 2 earn
+6. Watch & earn
+7. Survay slider
+
+8. All TAsk (With Filter)
+
 
 ### Step 4 — Replace login form handler in `app/login/page.js`
 ```js

@@ -29,9 +29,8 @@ export default function Footer() {
               <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#4a5380', marginBottom: 16 }}>{col.title}</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {col.links.map(l => (
-                  <Link key={l} href="#" style={{ fontSize: 14, color: '#8892b0', transition: 'color .2s' }}
-                    onMouseEnter={e => e.target.style.color='#f0f2ff'}
-                    onMouseLeave={e => e.target.style.color='#8892b0'}>
+                  <Link key={l} href="#" className='footer-link' style={{ fontSize: 14, color: '#8892b0', transition: 'color .2s' }}
+                  >
                     {l}
                   </Link>
                 ))}
