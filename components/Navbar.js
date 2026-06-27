@@ -27,6 +27,8 @@ export default function Navbar() {
       setUser(currentUser);
     });
 
+
+    
     return () => unsubscribe();
   }, []);
   return (
