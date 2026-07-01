@@ -40,11 +40,22 @@ export default function Navbar() {
   return (
     <>
       <nav className="navbar">
+        <div className='navbar_logo-wrap'>
+      <button
+            onClick={() => setOpen(!open)}
+            className="burger"
+            aria-label="Menu"
+          >
+            <span className="burger-bar" />
+            <span className="burger-bar" />
+            <span className="burger-bar" />
+          </button>
         {/* Logo */}
         <Link href="/" className="navbar-logo">
           <span className="navbar-logo-icon">₿</span>
           <span className="navbar-logo-text">CryptoEarns</span>
         </Link>
+        </div>
 
         {/* Desktop Links */}
         <div className="navbar-links">
@@ -75,15 +86,7 @@ export default function Navbar() {
             </>
           )}
 
-          <button
-            onClick={() => setOpen(!open)}
-            className="burger"
-            aria-label="Menu"
-          >
-            <span className="burger-bar" />
-            <span className="burger-bar" />
-            <span className="burger-bar" />
-          </button>
+        
         </div>
       </nav>
 

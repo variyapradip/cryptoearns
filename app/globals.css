@@ -83,6 +83,11 @@ img { max-width: 100%; }
   padding: 0 32px;
   justify-content: space-between;
 }
+.navbar_logo-wrap{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .navbar-logo {
   display: flex;
   align-items: center;
@@ -1451,12 +1456,17 @@ img { max-width: 100%; }
 }
 
 @media (max-width: 768px) {
-  .navbar { padding: 0 16px; }
+  .navbar { padding: 0 16px;height: 50px; }
   .navbar-links { display: none; }
   .burger { display: flex; }
+  .mobile-drawer { padding: 32px 16px }
   .mb_menu { display: none; }
-  .profile-box { display: none; }
-
+  .navbar-logo-icon{ width: 25px;height: 25px;border-radius: 5px; }
+  .navbar-logo-text{ font-size: 14px; }
+  .profile-img{ width: 25px; height: 25px; }
+  .profile-label{ font-size: 8px; }
+  .user-earning-text { font-size: 12px; }
+  .profile-box{ max-width: 100px; min-width: 100px; }
   .hero-section { padding: 60px 20px; }
   .how-section  { padding: 60px 20px; }
   .tasks-section { padding: 0 20px 60px; }
