@@ -23,6 +23,15 @@ function friendlyError(code) {
   }
 }
 
+const FIELDS = [
+  { label: 'Full Name', key: 'name',     type: 'text',     placeholder: 'John Doe' },
+  { label: 'Email',     key: 'email',    type: 'email',    placeholder: 'you@example.com' },
+  { label: 'Password',  key: 'password', type: 'password', placeholder: 'Min 6 characters' },
+  { label: 'Referral Code (optional)', key: 'ref', type: 'text', placeholder: 'EARN5000' },
+];
+
+const PERKS = ['Free to join — no card needed', 'Instant crypto payouts', 'Bonus 0.5 USDT on signup'];
+
 export default function RegisterPage() {
   const router = useRouter();
   const [form, setForm]       = useState({ name: '', email: '', password: '', ref: '' });
@@ -61,34 +70,24 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0d0f1a', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: -100, right: -100, width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle,#7c3aed18,transparent 70%)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: -100, left: -100, width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle,#3b82f618,transparent 70%)', pointerEvents: 'none' }} />
+    <div className="auth-page">
+      <div className="auth-glow auth-glow--tr" />
+      <div className="auth-glow auth-glow--bl" />
 
-      <div style={{ width: '100%', maxWidth: 460, position: 'relative', zIndex: 1 }}>
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 22, textDecoration: 'none' }}>
-            <span style={{ width: 38, height: 38, borderRadius: 10, background: 'linear-gradient(135deg,#7c3aed,#3b82f6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>₿</span>
-            <span style={{ background: 'linear-gradient(90deg,#9d5cff,#3b82f6)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>CryptoEarns</span>
+      <div className="auth-inner">
+        <div className="auth-logo-wrap">
+          <Link href="/" className="auth-logo">
+            <span className="auth-logo-icon">₿</span>
+            <span className="auth-logo-text">CryptoEarns</span>
           </Link>
         </div>
 
-        <div style={{ background: '#141728', border: '1px solid #252a45', borderRadius: 20, padding: '40px 36px' }}>
-          <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 24, fontWeight: 700, marginBottom: 6, color: '#f0f2ff' }}>Create account</h1>
-          <p style={{ fontSize: 14, color: '#8892b0', marginBottom: 32 }}>Start earning crypto for free today</p>
+        <div className="auth-card">
+          <h1 className="auth-title">Create account</h1>
+          <p className="auth-subtitle">Start earning crypto for free today</p>
 
           {/* Google button */}
-          <button
-            onClick={handleGoogle}
-            disabled={loading}
-            style={{
-              width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-              padding: '12px', background: '#1a1e35', border: '1px solid #252a45',
-              borderRadius: 10, color: '#f0f2ff', fontSize: 14, fontWeight: 600,
-              cursor: loading ? 'wait' : 'pointer', marginBottom: 20, transition: 'border-color .2s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.borderColor = '#3a3a60'}
-            onMouseLeave={e => e.currentTarget.style.borderColor = '#252a45'}>
+          <button onClick={handleGoogle} disabled={loading} className="auth-google-btn">
             <svg width="16" height="16" viewBox="0 0 48 48">
               <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
               <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
@@ -98,73 +97,54 @@ export default function RegisterPage() {
             Continue with Google
           </button>
 
-          <div style={{ position: 'relative', textAlign: 'center', marginBottom: 20 }}>
-            <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: '#252a45' }} />
-            <span style={{ position: 'relative', background: '#141728', padding: '0 12px', fontSize: 12, color: '#4a5380' }}>or sign up with email</span>
+          <div className="auth-divider">
+            <div className="auth-divider-line" />
+            <span className="auth-divider-text">or sign up with email</span>
           </div>
 
           {/* Error message */}
           {error && (
-            <div style={{ background: '#f43f5e18', border: '1px solid #f43f5e40', color: '#f87171', borderRadius: 8, padding: '10px 14px', fontSize: 13, marginBottom: 16 }}>
-              ⚠ {error}
-            </div>
+            <div className="auth-error">⚠ {error}</div>
           )}
 
-          <form onSubmit={handle} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {[
-              { label: 'Full Name', key: 'name',     type: 'text',     placeholder: 'John Doe' },
-              { label: 'Email',     key: 'email',    type: 'email',    placeholder: 'you@example.com' },
-              { label: 'Password',  key: 'password', type: 'password', placeholder: 'Min 6 characters' },
-              { label: 'Referral Code (optional)', key: 'ref', type: 'text', placeholder: 'EARN5000' },
-            ].map(f => (
+          <form onSubmit={handle} className="auth-form">
+            {FIELDS.map((f) => (
               <div key={f.key}>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#8892b0', marginBottom: 8 }}>{f.label}</label>
+                <label className="auth-label">{f.label}</label>
                 <input
                   type={f.type}
                   placeholder={f.placeholder}
                   value={form[f.key]}
-                  onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
+                  onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
                   required={f.key !== 'ref'}
-                  style={{
-                    width: '100%', padding: '12px 16px',
-                    background: '#0d0f1a', border: '1px solid #252a45',
-                    borderRadius: 10, color: '#f0f2ff', fontSize: 14, outline: 'none',
-                    transition: 'border-color .2s',
-                  }}
-                  onFocus={e => e.target.style.borderColor = '#7c3aed'}
-                  onBlur={e => e.target.style.borderColor = '#252a45'}
+                  className="auth-input"
                 />
               </div>
             ))}
 
             {/* Perks list */}
-            <div style={{ background: '#0d0f1a', border: '1px solid #1e2340', borderRadius: 10, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {['Free to join — no card needed', 'Instant crypto payouts', 'Bonus 0.5 USDT on signup'].map(perk => (
-                <div key={perk} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#8892b0' }}>
-                  <span style={{ color: '#22c55e', fontWeight: 700 }}>✓</span> {perk}
+            <div className="auth-perks">
+              {PERKS.map((perk) => (
+                <div key={perk} className="auth-perk">
+                  <span className="auth-perk-check">✓</span> {perk}
                 </div>
               ))}
             </div>
 
-            <button type="submit" disabled={loading} style={{
-              padding: '14px', borderRadius: 10, fontWeight: 700, fontSize: 15,
-              background: 'linear-gradient(135deg,#7c3aed,#3b82f6)', color: '#fff',
-              opacity: loading ? 0.7 : 1, cursor: loading ? 'wait' : 'pointer',
-              marginTop: 4, border: 'none', transition: 'opacity .2s',
-            }}>
+            <button type="submit" disabled={loading} className="auth-submit">
               {loading ? 'Creating account…' : 'Create Free Account'}
             </button>
 
-            <p style={{ fontSize: 11, color: '#4a5380', textAlign: 'center', lineHeight: 1.6 }}>
+            <p className="auth-legal">
               By signing up you agree to our{' '}
-              <Link href="#" style={{ color: '#9d5cff' }}>Terms of Use</Link> and{' '}
-              <Link href="#" style={{ color: '#9d5cff' }}>Privacy Policy</Link>.
+              <Link href="#">Terms of Use</Link> and{' '}
+              <Link href="#">Privacy Policy</Link>.
             </p>
           </form>
 
-          <p style={{ textAlign: 'center', fontSize: 13, color: '#8892b0', marginTop: 24 }}>
+          <p className="auth-footer">
             Already have an account?{' '}
-            <Link href="/login" style={{ color: '#9d5cff', fontWeight: 600 }}>Sign in</Link>
+            <Link href="/login">Sign in</Link>
           </p>
         </div>
       </div>
